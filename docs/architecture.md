@@ -6,17 +6,12 @@ Each domain is structured into isolated modules (e.g., `orders`) and divided int
 
 ### 📦 Module Structure Example (`orders`)
 
-orders/ 
-     ├── application/ # Use cases and business logic │ 
-            └── use-cases/ |
-     ├── domain/ # Entities, enums, interfaces (pure business rules) │ 
-     └── entities/ 
-     ├── infra/ # External integrations (database, Kafka, Elasticsearch, etc.) │ 
-           └── repositories/
-           └── kafka/ 
-     │ └── elastic/ 
-     ├── dto/ # Data Transfer Objects 
-     ├── controllers/ # REST API controllers 
+/orders
+├── /application Use cases and business logic
+├── /domain - Entities, enums, interfaces (pure business rules) │ 
+├── /infra - External integrations (database, Kafka, Elasticsearch, etc.) │
+├── /dto - # Data Transfer Objects 
+├── /controllers  REST API controllers 
 
 ### 💡 Key Concepts
 

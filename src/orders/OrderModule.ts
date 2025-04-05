@@ -7,14 +7,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './infra/models/Orders';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Order])],
-    providers: [
-        OrderUseCase,
-        {
-            provide: InjectionToken.ORDERS_REPOSITORY,
-            useClass: InMemoryOrderRepository,
-        },
-    ],
-    controllers: [OrderController],
+  imports: [TypeOrmModule.forFeature([Order])],
+  providers: [
+    OrderUseCase,
+    {
+      provide: InjectionToken.ORDERS_REPOSITORY,
+      useClass: InMemoryOrderRepository,
+    },
+  ],
+  controllers: [OrderController],
 })
-export class OrderModule { }
+export class OrderModule {}

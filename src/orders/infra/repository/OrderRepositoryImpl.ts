@@ -1,0 +1,30 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { OrderRepository } from '../../domain/OrderRepository';
+import { Order as ORMOrder } from '../models/Orders';
+import { Order as DomainOrder } from '../../domain/Order';
+import { OrderMapper } from '../mappper/OrderMapper';
+@Injectable()
+export class TypeOrmOrderRepository implements OrderRepository {
+  constructor(
+    @InjectRepository(ORMOrder)
+    private readonly orderRepo: Repository<ORMOrder>,
+  ) {}
+
+  async save(order: DomainOrder): Promise<void> {
+    const ormOrder = OrderMapper.toPersistence(order);
+    await this.orderRepo.save(ormOrder);
+  }
+
+  async findAll(user_id: string): Promise<DomainOrder[]> {
+    const orders = await this.orderRepo.find();
+    return orders.map(OrderMapper.toDomain);
+  }
+
+  async findById(id: string): Promise<DomainOrder | null> {
+    const order = await this.orderRepo.findOne({ where: { id } });
+    if (!order) throw new Error('Order not found');
+    return OrderMapper.toDomain(order);
+  }
+}

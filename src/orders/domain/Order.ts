@@ -1,9 +1,10 @@
-enum Status {
+
+export enum Status {
   PENDING = 'pending',
   PROCESSING = 'processing',
   SHIPPED = 'shipped',
   DELIVERED = 'delivered',
-  CANCELELED = 'cancelled',
+  CANCELED = 'cancelled',
 }
 
 export type OrderItem = {
@@ -13,30 +14,53 @@ export type OrderItem = {
   price: number;
 };
 
-export type Order = {
+export type OrderEssentialProperties = {
   id: string;
   items: OrderItem[];
   status: Status;
-  createdAt: Date;
-  updatedAt: Date;
 };
 
+export type OrderOptionalProperties = {
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 
-export type OrderEssentialProperties = Readonly<
-  Required<{
-    id: string
-    status: Status;
-    items: OrderItem[]
-  }>
->;
+export type OrderProperties = OrderEssentialProperties & OrderOptionalProperties;
+export type OrderData = Required<OrderProperties>;
 
-export type OrderOptionalProperties = Readonly<
-  Partial<{
-    createdAt: Date;
-    updatedAt: Date;
-  }>
->;
 
-export type OrderProperties = OrderEssentialProperties &
-  Required<OrderEssentialProperties>;
+export class Order {
+  constructor(
+    readonly id: string,
+    private _status: Status,
+    private _items: OrderItem[],
+    private _createdAt: Date,
+    private _updatedAt: Date,
+  ) {}
 
+  get status() {
+    return this._status;
+  }
+
+  get items() {
+    return this._items;
+  }
+
+  get createdAt() {
+    return this._createdAt;
+  }
+
+  get updatedAt() {
+    return this._updatedAt;
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      status: this._status,
+      items: this._items,
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt,
+    };
+  }
+}

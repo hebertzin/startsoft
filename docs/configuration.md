@@ -24,3 +24,17 @@ DB_PORT=5432
 DB_USERNAME=hebert
 DB_PASSWORD=203040
 DB_NAME=docker
+```
+
+## Running application
+
+- dev `npm run start:dev`
+- prod `npm run start:prod`
+
+## Docker
+
+- up `npm run docker:up`
+- down `npm run docker:down`
+- push `npm run docker:push`
+- build `npm run docker:build`
+

@@ -1,4 +1,3 @@
-
 export enum Status {
   PENDING = 'pending',
   PROCESSING = 'processing',
@@ -25,9 +24,15 @@ export type OrderOptionalProperties = {
   updatedAt?: Date;
 };
 
-export type OrderProperties = OrderEssentialProperties & OrderOptionalProperties;
-export type OrderData = Required<OrderProperties>;
+export type CreateOrderInput = {
+  id: string;
+  items: OrderItem[];
+};
 
+
+export type OrderProperties = OrderEssentialProperties &
+  OrderOptionalProperties;
+export type OrderData = Required<OrderProperties>;
 
 export class Order {
   constructor(

@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpStatus,
-  Post,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { OrderUseCase } from 'src/orders/application/useCase/OrderUseCase';
 import { CreateOrderInput } from 'src/orders/domain/Order';
@@ -16,6 +10,8 @@ export class OrderController {
   @Post()
   async create(@Body() input: CreateOrderInput, @Res() res: Response) {
     await this.orderUseCase.save(input);
-    return res.status(HttpStatus.CREATED).json({ message: 'Order Created succesfully' });
+    return res
+      .status(HttpStatus.CREATED)
+      .json({ message: 'Order Created succesfully' });
   }
 }

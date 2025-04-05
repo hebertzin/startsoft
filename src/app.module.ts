@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { OrderModule } from './orders/OrderModule';
+import { Order } from './orders/infra/models/Orders';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -14,7 +15,7 @@ import { OrderModule } from './orders/OrderModule';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [],
+      entities: [Order],
       synchronize: true,
     }),
     OrderModule,

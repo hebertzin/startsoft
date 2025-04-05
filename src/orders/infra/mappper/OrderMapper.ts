@@ -15,7 +15,6 @@ export class OrderMapper {
   static toPersistence(order: DomainOrder): ORMOrder {
     const ormOrder = new ORMOrder();
     ormOrder.id = order.id;
-    ormOrder.status = order.status;
     ormOrder.items = order.items;
     ormOrder.createdAt = order.createdAt;
     ormOrder.updatedAt = order.updatedAt;

@@ -17,7 +17,7 @@ export class OrderController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() input: CreateOrderInput, @Res() res: Response) {
+  async create(@Body() input: CreateOrderInput) {
     await this.orderUseCase.save(input);
     return HttpResponse.created(null, 'Order created successfully');
   }

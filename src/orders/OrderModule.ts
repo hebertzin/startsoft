@@ -5,6 +5,7 @@ import { OrderController } from './infra/controllers/OrderController';
 import { InMemoryOrderRepository } from './infra/repository/in-memory/InMemoryOrderRepository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './infra/models/Orders';
+import { TypeOrmOrderRepository } from './infra/repository/OrderRepositoryImpl';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Order])],
@@ -12,7 +13,7 @@ import { Order } from './infra/models/Orders';
     OrderUseCase,
     {
       provide: InjectionToken.ORDERS_REPOSITORY,
-      useClass: InMemoryOrderRepository,
+      useClass: TypeOrmOrderRepository,
     },
   ],
   controllers: [OrderController],

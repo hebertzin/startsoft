@@ -1,17 +1,17 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { HttpResponse } from 'src/http/http';
 import { OrderUseCase } from 'src/orders/application/useCase/OrderUseCase';
-import { CreateOrderInput } from 'src/orders/domain/Order';
+import { CreateOrderInput } from '../dto/CreateOrderDTO';
 
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderUseCase: OrderUseCase) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() input: CreateOrderInput, @Res() res: Response) {
     await this.orderUseCase.save(input);
-    return res
-      .status(HttpStatus.CREATED)
-      .json({ message: 'Order Created succesfully' });
+    return HttpResponse.created(null, 'Order created successfully');
   }
 }

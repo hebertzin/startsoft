@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  CreateOrderInput,
+  createOrderInput,
   Order,
   OrderItem,
   Status,
@@ -15,7 +15,7 @@ export class OrderUseCase {
     private readonly orderRepository: OrderRepository,
   ) {}
 
-  async save(input: CreateOrderInput): Promise<void> {
+  async save(input: createOrderInput): Promise<void> {
     const now = new Date();
     const order = new Order(input.id, Status.PENDING, input.items, now, now);
 

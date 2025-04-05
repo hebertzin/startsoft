@@ -24,7 +24,7 @@ export type OrderOptionalProperties = {
   updatedAt?: Date;
 };
 
-export type CreateOrderInput = {
+export type createOrderInput = {
   id: string;
   items: OrderItem[];
 };

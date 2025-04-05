@@ -10,7 +10,7 @@ export class InMemoryOrderRepository implements OrderRepository {
     this.orders.push(order);
   }
 
-  async findAll(userId: string): Promise<Order[]> {
+  async findAll(): Promise<Order[]> {
     return this.orders;
   }
 

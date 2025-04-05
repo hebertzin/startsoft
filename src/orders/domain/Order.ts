@@ -29,7 +29,6 @@ export type CreateOrderInput = {
   items: OrderItem[];
 };
 
-
 export type OrderProperties = OrderEssentialProperties &
   OrderOptionalProperties;
 export type OrderData = Required<OrderProperties>;

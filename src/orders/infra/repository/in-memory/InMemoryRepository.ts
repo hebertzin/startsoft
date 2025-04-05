@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { Order } from "src/orders/domain/Order";
-import { OrderRepository } from "src/orders/domain/OrderRepository";
+import { Injectable } from '@nestjs/common';
+import { Order } from 'src/orders/domain/Order';
+import { OrderRepository } from 'src/orders/domain/OrderRepository';
 
 @Injectable()
 export class InMemoryOrderRepository implements OrderRepository {

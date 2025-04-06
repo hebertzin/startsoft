@@ -47,7 +47,7 @@ export class OrderUseCase {
   async update(order_id: string, order: Order): Promise<string> {
     const updated = await this.orderRepository.update(order_id, order);
     await this.eventPublisher.publishOrderStatusUpdated(updated);
-    await this.elasticOrderSearch.index(order)
+    await this.elasticOrderSearch.index(order);
     return updated;
   }
 

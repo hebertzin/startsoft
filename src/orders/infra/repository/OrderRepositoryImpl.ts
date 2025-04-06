@@ -15,7 +15,7 @@ export class TypeOrmOrderRepository implements OrderRepository {
   async save(order: DomainOrder): Promise<string> {
     const ormOrder = OrderMapper.toPersistence(order);
     const result = await this.orderRepo.save(ormOrder);
-    return result.id
+    return result.id;
   }
 
   async findAll(): Promise<DomainOrder[]> {

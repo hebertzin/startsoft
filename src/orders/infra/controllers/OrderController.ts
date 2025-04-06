@@ -65,10 +65,14 @@ export class OrderController {
     @Query('end') end?: string,
     @Query('item') item?: string,
   ) {
-    return await this.orderUseCase.filterOrders({ id, status, start, end, item });
+    return await this.orderUseCase.filterOrders({
+      id,
+      status,
+      start,
+      end,
+      item,
+    });
   }
-  
-  
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)

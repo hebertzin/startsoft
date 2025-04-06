@@ -5,9 +5,7 @@ import { KafkaEventHandler } from 'src/orders/domain/KafkaEventHandler';
 export class KafkaConsumer implements OnModuleInit {
   private readonly logger = new Logger(KafkaConsumer.name);
 
-  constructor(
-    private readonly handlers: KafkaEventHandler[],
-  ) {}
+  constructor(private readonly handlers: KafkaEventHandler[]) {}
 
   async onModuleInit() {
     const kafka = new Kafka({ brokers: ['localhost:9092'] });
@@ -23,14 +21,14 @@ export class KafkaConsumer implements OnModuleInit {
     await consumer.run({
       eachMessage: async ({ topic, message }: EachMessagePayload) => {
         const payload = JSON.parse(message.value?.toString() || '{}');
-        const handler = this.handlers.find(h => h.topic === topic);
+        const handler = this.handlers.find((h) => h.topic === topic);
 
         if (handler) {
           await handler.handle(payload);
         } else {
           this.logger.warn(`No handler found for topic: ${topic}`);
         }
-      }
+      },
     });
   }
 }

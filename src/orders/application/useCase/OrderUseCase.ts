@@ -18,8 +18,8 @@ export class OrderUseCase {
     @Inject(InjectionToken.ORDERS_REPOSITORY)
     private readonly orderRepository: OrderRepository,
     @Inject(InjectionToken.ORDER_EVENT_PUBLISHER)
-    private readonly eventPublisher: OrderEventPublisher
-  ) {}
+    private readonly eventPublisher: OrderEventPublisher,
+  ) { }
 
   async save(input: createOrderInput): Promise<void> {
     const now = new Date();
@@ -42,7 +42,9 @@ export class OrderUseCase {
   }
 
   async update(order_id: string, order: OrderProperties): Promise<string> {
-    return await this.orderRepository.update(order_id, order);
+    const updated = await this.orderRepository.update(order_id, order)
+    await this.eventPublisher.publishOrderStatusUpdated(updated)
+    return updated;
   }
 
   async delete(id: string): Promise<void> {

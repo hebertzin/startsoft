@@ -9,7 +9,13 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+} from '@nestjs/swagger';
 
 import { HttpResponse } from 'src/http/http';
 import { OrderUseCase } from 'src/orders/application/useCase/OrderUseCase';
@@ -34,18 +40,26 @@ export class OrderController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all orders' })
-  @ApiResponse({ status: 200, description: 'Orders found successfully', type: [Order] })
+  @ApiResponse({
+    status: 200,
+    description: 'Orders found successfully',
+    type: [Order],
+  })
   async findAll() {
     const all = await this.orderUseCase.findAll();
     return HttpResponse.ok(all, 'Orders found successfully');
   }
 
-  @Get(":id")
+  @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get order by ID' })
   @ApiParam({ name: 'id', type: String })
-  @ApiResponse({ status: 200, description: 'Order found successfully', type: Order })
-  async findById(@Param("id") order_id: string) {
+  @ApiResponse({
+    status: 200,
+    description: 'Order found successfully',
+    type: Order,
+  })
+  async findById(@Param('id') order_id: string) {
     const order = await this.orderUseCase.findById(order_id);
     return HttpResponse.ok(order, 'Order found successfully');
   }
@@ -55,12 +69,15 @@ export class OrderController {
   @ApiOperation({ summary: 'Update an order' })
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Order updated successfully' })
-  async update(
-    @Param('id') order_id: string,
-    @Body() updateOrderDto: any,
-  ) {
-    const updatedOrderId = await this.orderUseCase.update(order_id, updateOrderDto);
-    return HttpResponse.ok({ id: updatedOrderId }, 'Order updated successfully');
+  async update(@Param('id') order_id: string, @Body() updateOrderDto: any) {
+    const updatedOrderId = await this.orderUseCase.update(
+      order_id,
+      updateOrderDto,
+    );
+    return HttpResponse.ok(
+      { id: updatedOrderId },
+      'Order updated successfully',
+    );
   }
 
   @Delete(':id')

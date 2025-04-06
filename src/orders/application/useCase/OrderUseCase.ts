@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
   createOrderInput,
   Order,
@@ -31,7 +31,7 @@ export class OrderUseCase {
   async findById(order_id: string): Promise<Order> {
     const order = await this.orderRepository.findById(order_id);
     if (!order) {
-      throw new Error('Order not found');
+      throw new NotFoundException('Order not found');
     }
     return order;
   }

@@ -18,8 +18,12 @@ import { KafkaModule } from './infra/kafka/KafkaModule';
       provide: InjectionToken.ORDERS_REPOSITORY,
       useClass: TypeOrmOrderRepository,
     },
+    {
+      provide: InjectionToken.ORDER_EVENT_PUBLISHER,
+      useClass: OrderProducer,
+    },
   ],
   controllers: [OrderController],
-  exports:[OrderProducer]
+  exports: [OrderProducer],
 })
 export class OrderModule {}

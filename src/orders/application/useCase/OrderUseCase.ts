@@ -10,21 +10,23 @@ import { OrderRepository } from 'src/orders/domain/OrderRepository';
 import { InjectionToken } from '../InjectToken';
 import { v4 as uuidv4 } from 'uuid';
 import { OrderProducer } from 'src/orders/infra/kafka/KafkaOrderProducer';
+import { OrderEventPublisher } from 'src/orders/domain/OrderEventPublisher';
 
 @Injectable()
 export class OrderUseCase {
   constructor(
     @Inject(InjectionToken.ORDERS_REPOSITORY)
     private readonly orderRepository: OrderRepository,
-    private readonly kafkaOrderProducer: OrderProducer
-  ) { }
+    @Inject(InjectionToken.ORDER_EVENT_PUBLISHER)
+    private readonly eventPublisher: OrderEventPublisher
+  ) {}
 
   async save(input: createOrderInput): Promise<void> {
     const now = new Date();
     const order = new Order(uuidv4(), Status.PENDING, input.items, now, now);
 
     await this.orderRepository.save(order);
-    await this.kafkaOrderProducer.publishOrderCreated(order)
+    await this.eventPublisher.publishOrderCreated(order);
   }
 
   async findAll(): Promise<OrderData[]> {

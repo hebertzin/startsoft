@@ -2,16 +2,16 @@
 
 ### 🛒 Order Management
 
-- [ ] Create orders  
-- [ ] List orders  
-- [ ] Update orders  
-- [ ] Cancel orders  
+- [x] Create orders  
+- [x] List orders  
+- [x] Update orders  
+- [x] Cancel orders  
 - [ ] Publish `order_created` event when creating an order  
 - [ ] Publish `order_status_updated` event when updating order status  
 - [ ] Index orders in Elasticsearch  
 - [ ] Update index when editing orders  
 - [ ] API endpoint for searching by:
-  - [ ] Order ID  
+  - [x] Order ID  
   - [ ] Order status  
   - [ ] Date range  
   - [ ] Order items  
@@ -39,7 +39,7 @@ Each order should contain:
 
 ## 🐳 Docker Setup
 
-- [ ] `docker-compose` with all required services:
+- [x] `docker-compose` with all required services:
   - [x] NestJS App  
   - [x] PostgreSQL  
   - [ ] Kafka  
@@ -47,4 +47,4 @@ Each order should contain:
 
 ## 📘 API Documentation
 
-- [ ] Swagger available at `/api/v1/documentation`
+- [x] Swagger available at `/api/v1/documentation`

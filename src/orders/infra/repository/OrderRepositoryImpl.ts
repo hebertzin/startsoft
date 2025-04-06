@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderRepository } from '../../domain/OrderRepository';
 import { Order as ORMOrder } from '../models/Orders';
-import { Order as DomainOrder } from '../../domain/Order';
+import { Order as DomainOrder, OrderProperties } from '../../domain/Order';
 import { OrderMapper } from '../mappper/OrderMapper';
 @Injectable()
 export class TypeOrmOrderRepository implements OrderRepository {
@@ -26,5 +26,18 @@ export class TypeOrmOrderRepository implements OrderRepository {
     const order = await this.orderRepo.findOne({ where: { id } });
     if (!order) throw new Error('Order not found');
     return OrderMapper.toDomain(order);
+  }
+
+  async update(id: string, order: OrderProperties): Promise<string> {
+    await this.orderRepo.update(id, order);  
+    return id;
+  }
+  
+  async delete(id: string): Promise<void> {
+    const order = await this.orderRepo.findOne({ where: { id } });
+    if (!order) {
+      throw new Error('Order not found');
+    }
+    await this.orderRepo.remove(order);
   }
 }

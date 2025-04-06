@@ -1,6 +1,4 @@
-// KafkaModule.ts
 import { Module } from '@nestjs/common';
-import { Kafka } from 'kafkajs';
 import { KafkaConsumer } from './KafkaOrderConsumer';
 import { OrderCreatedHandler } from './KafkaOrderCreated';
 import { OrderUpdatedHandler } from './KafkaOrderUpdated';

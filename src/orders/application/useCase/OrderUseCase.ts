@@ -23,13 +23,13 @@ export class OrderUseCase {
     private readonly elasticOrderSearch: ElasticOrderSearch,
   ) {}
 
-  async save(input: createOrderInput): Promise<void> {
+  async save(input: createOrderInput): Promise<string> {
     const now = new Date();
     const order = new Order(uuidv4(), Status.PENDING, input.items, now, now);
-
-    await this.orderRepository.save(order);
+    const orderId = await this.orderRepository.save(order);
     await this.elasticOrderSearch.index(order);
     await this.eventPublisher.publishOrderCreated(order);
+    return orderId;
   }
 
   async findAll(): Promise<OrderData[]> {
@@ -44,9 +44,10 @@ export class OrderUseCase {
     return order;
   }
 
-  async update(order_id: string, order: OrderProperties): Promise<string> {
+  async update(order_id: string, order: Order): Promise<string> {
     const updated = await this.orderRepository.update(order_id, order);
     await this.eventPublisher.publishOrderStatusUpdated(updated);
+    await this.elasticOrderSearch.index(order)
     return updated;
   }
 
@@ -55,6 +56,20 @@ export class OrderUseCase {
   }
 
   async searchByStatus(status: string) {
-     return await this.elasticOrderSearch.searchByStatus(status)
+    return await this.elasticOrderSearch.searchByStatus(status);
+  }
+
+  async searchItemsByName(name: string) {
+    return await this.elasticOrderSearch.searchByItemName(name);
+  }
+
+  async filterOrders(params: {
+    id?: string;
+    status?: string;
+    start?: string;
+    end?: string;
+    item?: string;
+  }): Promise<Partial<Order>[]> {
+    return await this.elasticOrderSearch.filterOrders(params);
   }
 }

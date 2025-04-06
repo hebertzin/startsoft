@@ -9,12 +9,12 @@
 - [x] Publish `order_created` event when creating an order  
 - [x] Publish `order_status_updated` event when updating order status  
 - [x] Index orders in Elasticsearch  
-- [ ] Update index when editing orders  
-- [ ] API endpoint for searching by:
+- [x] Update index when editing orders  
+- [x] API endpoint for searching by:
   - [x] Order ID  
   - [x] Order status  
-  - [ ] Date range  
-  - [ ] Order items  
+  - [x] Date range  
+  - [x] Order items  
 
 ## ✅ Testing
 

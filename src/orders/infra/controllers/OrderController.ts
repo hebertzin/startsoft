@@ -32,7 +32,7 @@ export class OrderController {
   constructor(
     @Inject(InjectionToken.ORDERS_USE_CASE)
     private readonly orderUseCase: OrderUseCase,
-  ) { }
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -40,8 +40,8 @@ export class OrderController {
   @ApiBody({ type: CreateOrderDTO })
   @ApiResponse({ status: 201, description: 'Order created successfully' })
   async create(@Body() input: CreateOrderDTO) {
-    await this.orderUseCase.save(input);
-    return HttpResponse.created(null, 'Order created successfully');
+    const orderId = await this.orderUseCase.save(input);
+    return HttpResponse.created(orderId, 'Order created successfully');
   }
 
   @Get()
@@ -58,9 +58,17 @@ export class OrderController {
   }
 
   @Get('filter')
-  async filterOrders(@Query('status') status: string) {
-    return await this.orderUseCase.searchByStatus(status as Status);
+  async filterOrders(
+    @Query('id') id?: string,
+    @Query('status') status?: string,
+    @Query('start') start?: string,
+    @Query('end') end?: string,
+    @Query('item') item?: string,
+  ) {
+    return await this.orderUseCase.filterOrders({ id, status, start, end, item });
   }
+  
+  
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)

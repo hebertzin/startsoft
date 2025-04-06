@@ -12,9 +12,10 @@ export class TypeOrmOrderRepository implements OrderRepository {
     private readonly orderRepo: Repository<ORMOrder>,
   ) {}
 
-  async save(order: DomainOrder): Promise<void> {
+  async save(order: DomainOrder): Promise<string> {
     const ormOrder = OrderMapper.toPersistence(order);
-    await this.orderRepo.save(ormOrder);
+    const result = await this.orderRepo.save(ormOrder);
+    return result.id
   }
 
   async findAll(): Promise<DomainOrder[]> {

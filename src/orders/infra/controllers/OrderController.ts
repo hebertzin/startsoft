@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Param,
   Post,
   Put,
@@ -18,14 +19,18 @@ import {
 } from '@nestjs/swagger';
 
 import { HttpResponse } from 'src/http/http';
-import { OrderUseCase } from 'src/orders/application/useCase/OrderUseCase';
 import { CreateOrderDTO } from '../dto/CreateOrderDTO';
 import { Order } from '../models/Orders';
+import { OrderUseCase } from 'src/orders/domain/OrderUseCase';
+import { InjectionToken } from 'src/orders/application/InjectToken';
 
 @ApiTags('Orders')
 @Controller('orders')
 export class OrderController {
-  constructor(private readonly orderUseCase: OrderUseCase) {}
+  constructor(
+    @Inject(InjectionToken.ORDERS_USE_CASE)
+    private readonly orderUseCase: OrderUseCase
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

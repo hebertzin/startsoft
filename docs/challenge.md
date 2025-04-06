@@ -24,7 +24,7 @@
 
 ## 📊 Logging and Monitoring
 
-- [ ] Request and error logging  
+- [x] Request and error logging  
 - [x] Kafka event logging  
 
 

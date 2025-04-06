@@ -9,7 +9,6 @@ import {
 import { OrderRepository } from 'src/orders/domain/OrderRepository';
 import { InjectionToken } from '../InjectToken';
 import { v4 as uuidv4 } from 'uuid';
-import { OrderProducer } from 'src/orders/infra/kafka/KafkaOrderProducer';
 import { OrderEventPublisher } from 'src/orders/domain/OrderEventPublisher';
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { createOrderInput, Order, Status } from 'src/orders/domain/Order';
+import { createOrderInput, Order, OrderData, OrderProperties, Status } from 'src/orders/domain/Order';
 import { OrderRepository } from 'src/orders/domain/OrderRepository';
 import { InjectionToken } from '../InjectToken';
 import { v4 as uuidv4 } from 'uuid'; // 👈 importa aqui
@@ -18,8 +18,8 @@ export class OrderUseCase {
     await this.orderRepository.save(order);
   }
 
-  async findAll(): Promise<Order[]> {
-    const all = await this.orderRepository.findAll();
-    return all
+  async findAll(): Promise<OrderData[]> {
+    return await this.orderRepository.findAll();
+
   }
 }

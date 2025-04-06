@@ -1,23 +1,38 @@
-import { Order as DomainOrder, Status } from 'src/orders/domain/Order';
+import { Order as DomainOrder, OrderItem, Status } from 'src/orders/domain/Order';
 import { Order as ORMOrder } from '../models/Orders';
 
 export class OrderMapper {
   static toDomain(order: ORMOrder): DomainOrder {
+    const items: OrderItem[] = (order.items || []).map(item => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      price: item.price,
+      name: item.name ?? '', 
+    }));
+  
     return new DomainOrder(
       order.id,
       order.status as Status,
-      order.items,
+      items,
       order.createdAt,
       order.updatedAt,
     );
   }
-
+  
   static toPersistence(order: DomainOrder): ORMOrder {
-    const ormOrder = new ORMOrder();
-    ormOrder.id = order.id;
-    ormOrder.items = order.items;
-    ormOrder.createdAt = order.createdAt;
-    ormOrder.updatedAt = order.updatedAt;
-    return ormOrder;
+    return {
+      id: order.id,
+      status: order.status,
+      items: order.items.map(item => {
+        return {
+          productId: item.productId,
+          quantity: item.quantity,
+          price: item.price,
+          name: item.name,
+        };
+      }),
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+    } as ORMOrder;
   }
 }

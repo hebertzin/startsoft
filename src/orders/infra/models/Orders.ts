@@ -15,7 +15,13 @@ export class Order {
   @Column({ type: 'enum', enum: Status, default: Status.PENDING })
   status: Status;
 
-  items: OrderItem[];
+  @Column({ type: 'json', nullable: true })
+  items: {
+    productId: string;
+    quantity: number;
+    price: number;
+    name?: string;
+  }[];
 
   @CreateDateColumn()
   createdAt: Date;

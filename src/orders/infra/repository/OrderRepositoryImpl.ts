@@ -29,10 +29,10 @@ export class TypeOrmOrderRepository implements OrderRepository {
   }
 
   async update(id: string, order: OrderProperties): Promise<string> {
-    await this.orderRepo.update(id, order);  
+    await this.orderRepo.update(id, order);
     return id;
   }
-  
+
   async delete(id: string): Promise<void> {
     const order = await this.orderRepo.findOne({ where: { id } });
     if (!order) {

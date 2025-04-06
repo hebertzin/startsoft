@@ -15,7 +15,7 @@ export class OrderUseCase {
   constructor(
     @Inject(InjectionToken.ORDERS_REPOSITORY)
     private readonly orderRepository: OrderRepository,
-  ) { }
+  ) {}
 
   async save(input: createOrderInput): Promise<void> {
     const now = new Date();
@@ -31,13 +31,13 @@ export class OrderUseCase {
   async findById(order_id: string): Promise<Order> {
     const order = await this.orderRepository.findById(order_id);
     if (!order) {
-      throw new Error("Order not found")
+      throw new Error('Order not found');
     }
     return order;
   }
 
   async update(order_id: string, order: OrderProperties): Promise<string> {
-    return await this.orderRepository.update(order_id,  order);
+    return await this.orderRepository.update(order_id, order);
   }
 
   async delete(id: string): Promise<void> {

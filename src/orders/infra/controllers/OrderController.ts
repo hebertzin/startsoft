@@ -16,7 +16,7 @@ import { CreateOrderDTO } from '../dto/CreateOrderDTO';
 
 @Controller('orders')
 export class OrderController {
-  constructor(private readonly orderUseCase: OrderUseCase) { }
+  constructor(private readonly orderUseCase: OrderUseCase) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -32,21 +32,24 @@ export class OrderController {
     return HttpResponse.ok(all, 'Orders found successfully');
   }
 
-  @Get(":id")
+  @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async findById(@Param("id") order_id: string) {
+  async findById(@Param('id') order_id: string) {
     const order = await this.orderUseCase.findById(order_id);
     return HttpResponse.ok(order, 'Order found successfully');
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  async update(
-    @Param('id') order_id: string,
-    @Body() updateOrderDto: any,
-  ) {
-    const updatedOrderId = await this.orderUseCase.update(order_id, updateOrderDto);
-    return HttpResponse.ok({ id: updatedOrderId }, 'Order updated successfully');
+  async update(@Param('id') order_id: string, @Body() updateOrderDto: any) {
+    const updatedOrderId = await this.orderUseCase.update(
+      order_id,
+      updateOrderDto,
+    );
+    return HttpResponse.ok(
+      { id: updatedOrderId },
+      'Order updated successfully',
+    );
   }
 
   @Delete(':id')
@@ -54,6 +57,4 @@ export class OrderController {
   async delete(@Param('id') order_id: string): Promise<void> {
     await this.orderUseCase.delete(order_id);
   }
-
-
 }

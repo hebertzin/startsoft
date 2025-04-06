@@ -10,6 +10,7 @@ import { OrderRepository } from 'src/orders/domain/OrderRepository';
 import { InjectionToken } from '../InjectToken';
 import { v4 as uuidv4 } from 'uuid';
 import { OrderEventPublisher } from 'src/orders/domain/OrderEventPublisher';
+import { ElasticOrderSearch } from 'src/orders/domain/OrderSearch';
 
 @Injectable()
 export class OrderUseCase {
@@ -18,6 +19,8 @@ export class OrderUseCase {
     private readonly orderRepository: OrderRepository,
     @Inject(InjectionToken.ORDER_EVENT_PUBLISHER)
     private readonly eventPublisher: OrderEventPublisher,
+    @Inject(InjectionToken.ORDER_ELASTIC_SEARCH)
+    private readonly elasticOrderSearch: ElasticOrderSearch,
   ) {}
 
   async save(input: createOrderInput): Promise<void> {
@@ -25,7 +28,8 @@ export class OrderUseCase {
     const order = new Order(uuidv4(), Status.PENDING, input.items, now, now);
 
     await this.orderRepository.save(order);
-    await this.eventPublisher.publishOrderCreated(order);
+    await this.elasticOrderSearch.index(order)
+    await this.eventPublisher.publishOrderCreated(order)
   }
 
   async findAll(): Promise<OrderData[]> {

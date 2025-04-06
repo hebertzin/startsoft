@@ -29,8 +29,8 @@ import { InjectionToken } from 'src/orders/application/InjectToken';
 export class OrderController {
   constructor(
     @Inject(InjectionToken.ORDERS_USE_CASE)
-    private readonly orderUseCase: OrderUseCase
-  ) { }
+    private readonly orderUseCase: OrderUseCase,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

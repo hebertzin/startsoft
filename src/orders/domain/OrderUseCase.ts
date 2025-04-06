@@ -1,4 +1,4 @@
-import { createOrderInput, Order, OrderData, OrderProperties } from './Order';
+import { createOrderInput, Order, OrderData, OrderProperties, Status } from './Order';
 
 export interface OrderUseCase {
   save(order: createOrderInput): Promise<void>;
@@ -6,4 +6,5 @@ export interface OrderUseCase {
   findById(id: string): Promise<Order | null>;
   update(id: string, order: OrderProperties): Promise<string>;
   delete(id: string): Promise<void>;
+  searchByStatus(status: Status): Promise<Order>
 }

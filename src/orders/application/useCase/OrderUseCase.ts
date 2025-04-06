@@ -53,4 +53,8 @@ export class OrderUseCase {
   async delete(id: string): Promise<void> {
     await this.orderRepository.delete(id);
   }
+
+  async searchByStatus(status: string) {
+     return await this.elasticOrderSearch.searchByStatus(status)
+  }
 }

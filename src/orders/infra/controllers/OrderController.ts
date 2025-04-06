@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -23,6 +24,7 @@ import { CreateOrderDTO } from '../dto/CreateOrderDTO';
 import { Order } from '../models/Orders';
 import { OrderUseCase } from 'src/orders/domain/OrderUseCase';
 import { InjectionToken } from 'src/orders/application/InjectToken';
+import { Status } from 'src/orders/domain/Order';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -30,7 +32,7 @@ export class OrderController {
   constructor(
     @Inject(InjectionToken.ORDERS_USE_CASE)
     private readonly orderUseCase: OrderUseCase,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -53,6 +55,11 @@ export class OrderController {
   async findAll() {
     const all = await this.orderUseCase.findAll();
     return HttpResponse.ok(all, 'Orders found successfully');
+  }
+
+  @Get('filter')
+  async filterOrders(@Query('status') status: string) {
+    return await this.orderUseCase.searchByStatus(status as Status);
   }
 
   @Get(':id')

@@ -26,6 +26,6 @@ export class OrderSearchService {
       },
     });
 
-    return hits.hits.map(hit => hit._source);
+    return hits.hits.map((hit) => hit._source);
   }
 }

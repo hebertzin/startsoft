@@ -28,8 +28,8 @@ export class OrderUseCase {
     const order = new Order(uuidv4(), Status.PENDING, input.items, now, now);
 
     await this.orderRepository.save(order);
-    await this.elasticOrderSearch.index(order)
-    await this.eventPublisher.publishOrderCreated(order)
+    await this.elasticOrderSearch.index(order);
+    await this.eventPublisher.publishOrderCreated(order);
   }
 
   async findAll(): Promise<OrderData[]> {

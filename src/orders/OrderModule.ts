@@ -13,7 +13,11 @@ import { OrderSearchService } from './infra/elasticsearch/OrderSearch';
 
 // here are concrete implementations
 @Module({
-  imports: [TypeOrmModule.forFeature([Order]), KafkaModule, ElasticSearchModule],
+  imports: [
+    TypeOrmModule.forFeature([Order]),
+    KafkaModule,
+    ElasticSearchModule,
+  ],
   providers: [
     OrderUseCase,
     OrderProducer,

@@ -6,16 +6,20 @@ import { InMemoryOrderRepository } from './infra/repository/in-memory/InMemoryOr
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './infra/models/Orders';
 import { TypeOrmOrderRepository } from './infra/repository/OrderRepositoryImpl';
+import { OrderProducer } from './infra/kafka/KafkaOrderProducer';
+import { KafkaModule } from './infra/kafka/KafkaModule';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Order])],
+  imports: [TypeOrmModule.forFeature([Order]), KafkaModule],
   providers: [
     OrderUseCase,
+    OrderProducer,
     {
       provide: InjectionToken.ORDERS_REPOSITORY,
       useClass: TypeOrmOrderRepository,
     },
   ],
   controllers: [OrderController],
+  exports:[OrderProducer]
 })
 export class OrderModule {}

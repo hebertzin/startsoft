@@ -9,12 +9,15 @@ import {
 import { OrderRepository } from 'src/orders/domain/OrderRepository';
 import { InjectionToken } from '../InjectToken';
 import { v4 as uuidv4 } from 'uuid';
+import { OrderEventPublisher } from 'src/orders/domain/OrderEventPublisher';
 
 @Injectable()
 export class OrderUseCase {
   constructor(
     @Inject(InjectionToken.ORDERS_REPOSITORY)
     private readonly orderRepository: OrderRepository,
+    @Inject(InjectionToken.ORDER_EVENT_PUBLISHER)
+    private readonly eventPublisher: OrderEventPublisher,
   ) {}
 
   async save(input: createOrderInput): Promise<void> {
@@ -22,6 +25,7 @@ export class OrderUseCase {
     const order = new Order(uuidv4(), Status.PENDING, input.items, now, now);
 
     await this.orderRepository.save(order);
+    await this.eventPublisher.publishOrderCreated(order);
   }
 
   async findAll(): Promise<OrderData[]> {
@@ -37,7 +41,9 @@ export class OrderUseCase {
   }
 
   async update(order_id: string, order: OrderProperties): Promise<string> {
-    return await this.orderRepository.update(order_id, order);
+    const updated = await this.orderRepository.update(order_id, order);
+    await this.eventPublisher.publishOrderStatusUpdated(updated);
+    return updated;
   }
 
   async delete(id: string): Promise<void> {

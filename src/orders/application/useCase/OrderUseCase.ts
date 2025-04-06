@@ -3,12 +3,11 @@ import {
   createOrderInput,
   Order,
   OrderData,
-  OrderProperties,
   Status,
 } from 'src/orders/domain/Order';
 import { OrderRepository } from 'src/orders/domain/OrderRepository';
 import { InjectionToken } from '../InjectToken';
-import { v4 as uuidv4 } from 'uuid'; // 👈 importa aqui
+import { v4 as uuidv4 } from 'uuid'; 
 
 @Injectable()
 export class OrderUseCase {

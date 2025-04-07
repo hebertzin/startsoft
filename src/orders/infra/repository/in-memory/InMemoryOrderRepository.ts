@@ -6,8 +6,9 @@ import { OrderRepository } from 'src/orders/domain/OrderRepository';
 export class InMemoryOrderRepository implements OrderRepository {
   private orders: Order[] = [];
 
-  async save(order: Order): Promise<void> {
+  async save(order: Order): Promise<string> {
     this.orders.push(order);
+    return order.id;
   }
 
   async findAll(): Promise<Order[]> {

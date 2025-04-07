@@ -19,12 +19,11 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 
-import { HttpResponse } from 'src/http/http';
 import { CreateOrderDTO } from '../dto/CreateOrderDTO';
 import { Order } from '../models/Orders';
 import { OrderUseCase } from 'src/orders/domain/OrderUseCase';
 import { InjectionToken } from 'src/orders/application/InjectToken';
-import { Status } from 'src/orders/domain/Order';
+import { OrderData } from 'src/orders/domain/Order';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -32,16 +31,21 @@ export class OrderController {
   constructor(
     @Inject(InjectionToken.ORDERS_USE_CASE)
     private readonly orderUseCase: OrderUseCase,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new order' })
   @ApiBody({ type: CreateOrderDTO })
-  @ApiResponse({ status: 201, description: 'Order created successfully' })
-  async create(@Body() input: CreateOrderDTO) {
-    const orderId = await this.orderUseCase.save(input);
-    return HttpResponse.created(orderId, 'Order created successfully');
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Order created successfully',
+    type: CreateOrderDTO
+  })
+  async create(
+    @Body() input: CreateOrderDTO
+  ): Promise<string> {
+    return await this.orderUseCase.save(input);
   }
 
   @Get()
@@ -50,11 +54,10 @@ export class OrderController {
   @ApiResponse({
     status: 200,
     description: 'Orders found successfully',
-    type: [Order],
+    type: Order,
   })
-  async findAll() {
-    const all = await this.orderUseCase.findAll();
-    return HttpResponse.ok(all, 'Orders found successfully');
+  async findAll() : Promise<Order[]> {
+    return await this.orderUseCase.findAll();
   }
 
   @Get('filter')
@@ -79,36 +82,38 @@ export class OrderController {
   @ApiOperation({ summary: 'Get order by ID' })
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({
-    status: 200,
-    description: 'Order found successfully',
+    status: HttpStatus.OK,
     type: Order,
+    description: 'Order found successfully',
   })
-  async findById(@Param('id') order_id: string) {
-    const order = await this.orderUseCase.findById(order_id);
-    return HttpResponse.ok(order, 'Order found successfully');
+  async findById(
+    @Param('id') order_id: string): Promise<Order | null> {
+    return await this.orderUseCase.findById(order_id);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update an order' })
   @ApiParam({ name: 'id', type: String })
-  @ApiResponse({ status: 200, description: 'Order updated successfully' })
-  async update(@Param('id') order_id: string, @Body() updateOrderDto: any) {
-    const updatedOrderId = await this.orderUseCase.update(
+  @ApiResponse({ 
+    status: HttpStatus.OK, 
+    description: 'Order updated successfully' 
+  })
+  async update(
+    @Param('id') order_id: string, 
+    @Body() updateOrderDto: any
+  ) :Promise<string> {
+    return await this.orderUseCase.update(
       order_id,
       updateOrderDto,
-    );
-    return HttpResponse.ok(
-      { id: updatedOrderId },
-      'Order updated successfully',
-    );
+    )
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete an order' })
   @ApiParam({ name: 'id', type: String })
-  @ApiResponse({ status: 204, description: 'Order deleted successfully' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Order deleted successfully' })
   async delete(@Param('id') order_id: string): Promise<void> {
     await this.orderUseCase.delete(order_id);
   }

@@ -15,7 +15,7 @@ export class OrderProducer implements OrderEventPublisher {
     });
   }
 
-  async publishOrderStatusUpdated(data: any): Promise<void> {
+  async publishOrderUpdated(data: any): Promise<void> {
     await this.kafkaProducer.send({
       topic: 'order_status_updated',
       messages: [{ value: JSON.stringify(data) }],

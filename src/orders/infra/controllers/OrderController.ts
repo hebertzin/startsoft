@@ -31,7 +31,7 @@ export class OrderController {
   constructor(
     @Inject(InjectionToken.ORDERS_USE_CASE)
     private readonly orderUseCase: OrderUseCase,
-  ) { }
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -40,11 +40,9 @@ export class OrderController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Order created successfully',
-    type: CreateOrderDTO
+    type: CreateOrderDTO,
   })
-  async create(
-    @Body() input: CreateOrderDTO
-  ): Promise<string> {
+  async create(@Body() input: CreateOrderDTO): Promise<string> {
     return await this.orderUseCase.save(input);
   }
 
@@ -56,7 +54,7 @@ export class OrderController {
     description: 'Orders found successfully',
     type: Order,
   })
-  async findAll() : Promise<Order[]> {
+  async findAll(): Promise<Order[]> {
     return await this.orderUseCase.findAll();
   }
 
@@ -86,8 +84,7 @@ export class OrderController {
     type: Order,
     description: 'Order found successfully',
   })
-  async findById(
-    @Param('id') order_id: string): Promise<Order | null> {
+  async findById(@Param('id') order_id: string): Promise<Order | null> {
     return await this.orderUseCase.findById(order_id);
   }
 
@@ -95,25 +92,25 @@ export class OrderController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update an order' })
   @ApiParam({ name: 'id', type: String })
-  @ApiResponse({ 
-    status: HttpStatus.OK, 
-    description: 'Order updated successfully' 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Order updated successfully',
   })
   async update(
-    @Param('id') order_id: string, 
-    @Body() updateOrderDto: any
-  ) :Promise<string> {
-    return await this.orderUseCase.update(
-      order_id,
-      updateOrderDto,
-    )
+    @Param('id') order_id: string,
+    @Body() updateOrderDto: any,
+  ): Promise<string> {
+    return await this.orderUseCase.update(order_id, updateOrderDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete an order' })
   @ApiParam({ name: 'id', type: String })
-  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Order deleted successfully' })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Order deleted successfully',
+  })
   async delete(@Param('id') order_id: string): Promise<void> {
     await this.orderUseCase.delete(order_id);
   }

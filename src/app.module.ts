@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { OrderModule } from './orders/OrderModule';
 import { Order } from './orders/infra/models/Orders';
+import { AppLogger } from './log/Logger';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -21,6 +22,6 @@ import { Order } from './orders/infra/models/Orders';
     OrderModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppLogger],
 })
 export class AppModule {}

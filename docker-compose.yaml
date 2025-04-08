@@ -1,9 +1,9 @@
-version: '3'
+version: '3.8'
 
 services:
-  # PostgreSQL
   starsoft:
     image: bitnami/postgresql:latest
+    container_name: starsoft-db
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -15,13 +15,16 @@ services:
 
   zookeeper:
     image: bitnami/zookeeper:latest
+    container_name: zookeeper
     ports:
       - "2181:2181"
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
 
+  # Kafka
   kafka:
     image: bitnami/kafka:3.4.0-debian-11-r0
+    container_name: kafka
     ports:
       - "9092:9092"
     environment:
@@ -45,6 +48,16 @@ services:
       - "9200:9200"
     volumes:
       - esdata:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
 
 volumes:
   pgdata:

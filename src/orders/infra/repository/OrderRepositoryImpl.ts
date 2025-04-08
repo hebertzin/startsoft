@@ -36,9 +36,6 @@ export class TypeOrmOrderRepository implements OrderRepository {
 
   async delete(id: string): Promise<void> {
     const order = await this.orderRepo.findOne({ where: { id } });
-    if (!order) {
-      throw new Error('Order not found');
-    }
-    await this.orderRepo.remove(order);
+    if (order) await this.orderRepo.remove(order);
   }
 }

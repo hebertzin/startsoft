@@ -10,8 +10,8 @@ import { OrderProducer } from './infra/kafka/KafkaOrderProducer';
 import { KafkaModule } from './infra/kafka/KafkaModule';
 import { ElasticSearchModule } from './infra/elasticsearch/ElasticSearchModule';
 import { OrderSearchService } from './infra/elasticsearch/OrderSearch';
+import { AppLogger } from 'src/log/Logger';
 
-// here are concrete implementations
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order]),
@@ -38,6 +38,10 @@ import { OrderSearchService } from './infra/elasticsearch/OrderSearch';
     {
       provide: InjectionToken.ORDER_ELASTIC_SEARCH,
       useClass: OrderSearchService,
+    },
+    {
+      provide: InjectionToken.LOGGER,
+      useClass: AppLogger,
     },
   ],
   controllers: [OrderController],

@@ -1,4 +1,10 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  LoggerService,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   createOrderInput,
   Order,
@@ -21,33 +27,56 @@ export class OrderUseCase {
     private readonly eventPublisher: OrderEventPublisher,
     @Inject(InjectionToken.ORDER_ELASTIC_SEARCH)
     private readonly elasticOrderSearch: ElasticOrderSearch,
+    @Inject(InjectionToken.LOGGER)
+    private readonly logger: LoggerService,
   ) {}
 
   async save(input: createOrderInput): Promise<string> {
     const now = new Date();
     const order = new Order(uuidv4(), Status.PENDING, input.items, now, now);
     const orderId = await this.orderRepository.save(order);
-    await this.elasticOrderSearch.index(order);
-    await this.eventPublisher.publishOrderCreated(order);
+
+    this.logger.log(`Order [${orderId}] saved to repository`);
+
+    await Promise.all([
+      this.elasticOrderSearch.index(order),
+      this.eventPublisher.publishOrderCreated(order),
+    ]);
+
+    this.logger.log(
+      `Order [${orderId}] indexed in ElasticSearch and event published`,
+    );
+
     return orderId;
   }
 
   async findAll(): Promise<OrderData[]> {
+    this.logger.log('Fetching all orders');
     return await this.orderRepository.findAll();
   }
 
   async findById(order_id: string): Promise<Order> {
+    this.logger.log(`Fetching order with id ${order_id}`);
     const order = await this.orderRepository.findById(order_id);
     if (!order) {
+      this.logger.warn(`Order [${order_id}] not found`);
       throw new NotFoundException('Order not found');
     }
     return order;
   }
 
   async update(order_id: string, order: Order): Promise<string> {
+    this.logger.log(`Updating order [${order_id}]`);
     const updated = await this.orderRepository.update(order_id, order);
-    await this.eventPublisher.publishOrderStatusUpdated(updated);
-    await this.elasticOrderSearch.index(order);
+
+    await Promise.all([
+      this.elasticOrderSearch.index(order),
+      this.eventPublisher.publishOrderUpdated(order),
+    ]);
+
+    this.logger.log(
+      `Order [${order_id}] updated, re-indexed and event published`,
+    );
     return updated;
   }
 
@@ -55,12 +84,13 @@ export class OrderUseCase {
     await this.orderRepository.delete(id);
   }
 
-  async searchByStatus(status: string) {
+  async searchByStatus(status: string): Promise<Partial<Order>[]> {
+    this.logger.log(`Searching orders with status: ${status}`);
     return await this.elasticOrderSearch.searchByStatus(status);
   }
 
-  async searchItemsByName(name: string) {
-    return await this.elasticOrderSearch.searchByItemName(name);
+  async searchItemsByName(name: string): Promise<Partial<Order[]>> {
+    return this.elasticOrderSearch.searchByItemName(name);
   }
 
   async filterOrders(params: {
@@ -70,6 +100,9 @@ export class OrderUseCase {
     end?: string;
     item?: string;
   }): Promise<Partial<Order>[]> {
-    return await this.elasticOrderSearch.filterOrders(params);
+    this.logger.log(
+      `Filtering orders with params: [${JSON.stringify(params)}]`,
+    );
+    return this.elasticOrderSearch.filterOrders(params);
   }
 }

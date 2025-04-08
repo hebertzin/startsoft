@@ -38,3 +38,10 @@ DB_NAME=docker
 - push `npm run docker:push`
 - build `npm run docker:build`
 
+
+## HOSTS
+
+- Kibana `http://localhost:5601`
+- Kafka `localhost:9092`
+- ElasticSearch `http://localhost:9200`
+- Postgres `localhost:5433`

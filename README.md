@@ -1,4 +1,4 @@
-## Starsoft Backend Challenge
+## Starsoft
 
 ### Before you start you can see some documentation about application modules.
 

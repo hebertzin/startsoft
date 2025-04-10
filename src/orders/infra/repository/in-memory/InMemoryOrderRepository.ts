@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Order, OrderProperties } from 'src/orders/domain/Order';
+import { Order, OrderParams } from 'src/orders/domain/Order';
 import { OrderRepository } from 'src/orders/domain/OrderRepository';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class InMemoryOrderRepository implements OrderRepository {
     return order;
   }
 
-  async update(id: string, orderProps: OrderProperties): Promise<string> {
+  async update(id: string, orderProps: OrderParams): Promise<string> {
     const index = this.orders.findIndex((o) => o.id === id);
     const existingOrder = this.orders[index];
     this.orders[index] = existingOrder;

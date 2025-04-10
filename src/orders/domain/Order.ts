@@ -1,10 +1,4 @@
-export enum Status {
-  PENDING = 'pending',
-  PROCESSING = 'processing',
-  SHIPPED = 'shipped',
-  DELIVERED = 'delivered',
-  CANCELED = 'cancelled',
-}
+import { Status } from './OrderStatus';
 
 export type OrderItem = {
   name: string;
@@ -13,25 +7,9 @@ export type OrderItem = {
   price: number;
 };
 
-export type OrderEssentialProperties = {
-  id: string;
-  items: OrderItem[];
-  status: Status;
-};
-
-export type OrderOptionalProperties = {
-  createdAt?: Date;
-  updatedAt?: Date;
-};
-
-export type createOrderInput = {
-  id: string;
+export type OrderParams = {
   items: OrderItem[];
 };
-
-export type OrderProperties = OrderEssentialProperties &
-  OrderOptionalProperties;
-export type OrderData = Required<OrderProperties>;
 
 export class Order {
   constructor(

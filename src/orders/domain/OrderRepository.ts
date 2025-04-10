@@ -1,9 +1,9 @@
-import { Order, OrderData, OrderProperties } from './Order';
+import { OrderParams, Order } from './Order';
 
 export interface OrderRepository {
-  save(order: OrderProperties): Promise<string>;
-  findAll(): Promise<OrderData[]>;
+  save(order: OrderParams): Promise<string>;
+  findAll(): Promise<Order[]>;
   findById(id: string): Promise<Order | null>;
-  update(id: string, order: OrderProperties): Promise<string>;
+  update(id: string, order: OrderParams): Promise<string>;
   delete(id: string): Promise<void>;
 }

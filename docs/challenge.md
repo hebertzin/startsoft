@@ -1,6 +1,6 @@
-## 🧾 Main Features
+## Main Features
 
-### 🛒 Order Management
+### Order Management
 
 - [x] Create orders  
 - [x] List orders  
@@ -16,13 +16,13 @@
   - [x] Date range  
   - [x] Order items  
 
-## ✅ Testing
+## Testing
 
 - [ ] Unit tests for services  
 - [ ] Integration tests for controllers  
 
 
-## 📊 Logging and Monitoring
+## Logging and Monitoring
 
 - [x] Request and error logging  
 - [x] Kafka event logging  
@@ -37,7 +37,7 @@ Each order should contain:
 - `createdAt`: creation date  
 - `updatedAt`: last update date  
 
-## 🐳 Docker Setup
+## Docker Setup
 
 - [x] `docker-compose` with all required services:
   - [x] NestJS App  
@@ -45,6 +45,6 @@ Each order should contain:
   - [x] Kafka  
   - [ ] Elasticsearch  
 
-## 📘 API Documentation
+## API Documentation
 
 - [x] Swagger available at `/api/v1/documentation`

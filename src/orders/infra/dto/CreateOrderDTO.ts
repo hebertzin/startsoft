@@ -1,10 +1,8 @@
 import {
-  IsUUID,
   IsArray,
   ValidateNested,
   IsString,
   IsNumber,
-  IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -22,10 +20,7 @@ class OrderItemDTO {
   name: string;
 }
 
-export class CreateOrderDTO {
-  @IsUUID()
-  id: string;
-
+export class OrderDTO {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => OrderItemDTO)

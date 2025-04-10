@@ -1,4 +1,4 @@
-import { OrderItem, Status } from 'src/orders/domain/Order';
+import { Status } from 'src/orders/domain/OrderStatus';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 @Entity('orders')
-export class Order {
+export class OrderModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

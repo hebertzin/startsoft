@@ -1,7 +1,7 @@
-import { Order } from './Order';
+import { OrderParams, Order } from './Order';
 
 export interface ElasticOrderSearch {
-  index(order: Order): Promise<void>;
+  index(order: OrderParams): Promise<void>;
   searchByStatus(status: string): Promise<Partial<Order>[]>;
   searchByItemName(item: string): Promise<Partial<Order[]>>;
   filterOrders(params: {

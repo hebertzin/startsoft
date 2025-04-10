@@ -1,16 +1,14 @@
 import {
-  createOrderInput,
+  OrderParams,
   Order,
-  OrderData,
-  OrderProperties,
-  Status,
 } from './Order';
+import { Status } from './OrderStatus';
 
 export interface OrderUseCase {
-  save(order: createOrderInput): Promise<string>;
-  findAll(): Promise<OrderData[]>;
+  save(order: OrderParams): Promise<string>;
+  findAll(): Promise<Order[]>;
   findById(id: string): Promise<Order | null>;
-  update(id: string, order: OrderProperties): Promise<string>;
+  update(id: string, order: OrderParams): Promise<string>;
   delete(id: string): Promise<void>;
   searchByStatus(status: Status): Promise<Order>;
   filterOrders(params: {

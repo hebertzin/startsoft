@@ -6,11 +6,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
-  createOrderInput,
+  OrderParams,
   Order,
-  OrderData,
-  OrderProperties,
-  Status,
 } from 'src/orders/domain/Order';
 import { OrderRepository } from 'src/orders/domain/OrderRepository';
 import { InjectionToken } from '../InjectToken';
@@ -31,16 +28,14 @@ export class OrderUseCase {
     private readonly logger: LoggerService,
   ) {}
 
-  async save(input: createOrderInput): Promise<string> {
-    const now = new Date();
-    const order = new Order(uuidv4(), Status.PENDING, input.items, now, now);
-    const orderId = await this.orderRepository.save(order);
+  async save(input: OrderParams): Promise<string> {
+    const orderId = await this.orderRepository.save(input);
 
     this.logger.log(`Order [${orderId}] saved to repository`);
 
     await Promise.all([
-      this.elasticOrderSearch.index(order),
-      this.eventPublisher.publishOrderCreated(order),
+      this.elasticOrderSearch.index(input),
+      this.eventPublisher.publishOrderCreated(input),
     ]);
 
     this.logger.log(
@@ -50,7 +45,7 @@ export class OrderUseCase {
     return orderId;
   }
 
-  async findAll(): Promise<OrderData[]> {
+  async findAll(): Promise<Order[]> {
     this.logger.log('Fetching all orders');
     return await this.orderRepository.findAll();
   }

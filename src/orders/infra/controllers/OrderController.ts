@@ -10,6 +10,8 @@ import {
   Post,
   Put,
   Query,
+  Req,
+  Res,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -19,31 +21,42 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 
-import { CreateOrderDTO } from '../dto/CreateOrderDTO';
-import { Order } from '../models/Orders';
 import { OrderUseCase } from 'src/orders/domain/OrderUseCase';
 import { InjectionToken } from 'src/orders/application/InjectToken';
-import { OrderData } from 'src/orders/domain/Order';
-
+import { Request, Response } from 'express';
+import { OrderDTO } from '../dto/CreateOrderDTO';
+import { Order } from 'src/orders/domain/Order';
 @ApiTags('Orders')
 @Controller('orders')
 export class OrderController {
   constructor(
     @Inject(InjectionToken.ORDERS_USE_CASE)
     private readonly orderUseCase: OrderUseCase,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new order' })
-  @ApiBody({ type: CreateOrderDTO })
+  @ApiBody({ type: OrderDTO })
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Order created successfully',
-    type: CreateOrderDTO,
+    type: OrderDTO,
   })
-  async create(@Body() input: CreateOrderDTO): Promise<string> {
-    return await this.orderUseCase.save(input);
+  async save(
+    @Body() input: OrderDTO,
+    @Req() req: Request,
+    @Res() res: Response): Promise<Response> {
+    const orderId = await this.orderUseCase.save(input)
+    return res.status(HttpStatus.CREATED).json({
+      data: {
+        id: orderId
+      },
+      metadata: {
+        requestId: req['requestId'],
+        timestamp: req['timestamp'],
+      },
+    })
   }
 
   @Get()
@@ -54,7 +67,7 @@ export class OrderController {
     description: 'Orders found successfully',
     type: Order,
   })
-  async findAll(): Promise<Order[]> {
+  async findAll() {
     return await this.orderUseCase.findAll();
   }
 
@@ -97,10 +110,21 @@ export class OrderController {
     description: 'Order updated successfully',
   })
   async update(
-    @Param('id') order_id: string,
+    @Param('id') id: string,
     @Body() updateOrderDto: any,
-  ): Promise<string> {
-    return await this.orderUseCase.update(order_id, updateOrderDto);
+    @Req() req: Request,
+    @Res() res: Response
+  ): Promise<Response> {
+    const orderId = await this.orderUseCase.update(id, updateOrderDto)
+    return res.status(HttpStatus.OK).json({
+      data: {
+        id: orderId
+      },
+      metadata: {
+        requestId: req['requestId'],
+        timestamp: req['timestamp'],
+      },
+    })
   }
 
   @Delete(':id')

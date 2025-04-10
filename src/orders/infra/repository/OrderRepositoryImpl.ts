@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderRepository } from '../../domain/OrderRepository';
-import { Order as ORMOrder } from '../models/Orders';
-import { Order as DomainOrder, OrderProperties } from '../../domain/Order';
+import { Order as DomainOrder, OrderParams } from '../../domain/Order';
 import { OrderMapper } from '../mappper/OrderMapper';
+import { OrderModel } from '../models/Orders';
 @Injectable()
 export class TypeOrmOrderRepository implements OrderRepository {
   constructor(
-    @InjectRepository(ORMOrder)
-    private readonly orderRepo: Repository<ORMOrder>,
+    @InjectRepository(OrderModel)
+    private readonly orderRepo: Repository<OrderModel>,
   ) {}
 
   async save(order: DomainOrder): Promise<string> {
@@ -29,7 +29,7 @@ export class TypeOrmOrderRepository implements OrderRepository {
     return OrderMapper.toDomain(order);
   }
 
-  async update(id: string, order: OrderProperties): Promise<string> {
+  async update(id: string, order: OrderParams): Promise<string> {
     await this.orderRepo.update(id, order);
     return id;
   }

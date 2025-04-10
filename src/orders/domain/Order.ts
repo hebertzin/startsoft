@@ -1,4 +1,4 @@
-import { Status } from "./OrderStatus";
+import { Status } from './OrderStatus';
 
 export type OrderItem = {
   name: string;
@@ -6,7 +6,6 @@ export type OrderItem = {
   quantity: number;
   price: number;
 };
-
 
 export type OrderParams = {
   items: OrderItem[];

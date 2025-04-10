@@ -11,7 +11,7 @@ async function bootstrap() {
   });
 
   app.useLogger(app.get(AppLogger));
-  
+
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   const config = new DocumentBuilder()

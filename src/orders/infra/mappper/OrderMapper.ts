@@ -1,7 +1,4 @@
-import {
-  Order,
-  OrderItem,
-} from 'src/orders/domain/Order';
+import { Order, OrderItem } from 'src/orders/domain/Order';
 import { OrderModel } from '../models/Orders';
 import { Status } from 'src/orders/domain/OrderStatus';
 

@@ -32,7 +32,7 @@ export class OrderController {
   constructor(
     @Inject(InjectionToken.ORDERS_USE_CASE)
     private readonly orderUseCase: OrderUseCase,
-  ) { }
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -46,17 +46,18 @@ export class OrderController {
   async save(
     @Body() input: OrderDTO,
     @Req() req: Request,
-    @Res() res: Response): Promise<Response> {
-    const orderId = await this.orderUseCase.save(input)
+    @Res() res: Response,
+  ): Promise<Response> {
+    const orderId = await this.orderUseCase.save(input);
     return res.status(HttpStatus.CREATED).json({
       data: {
-        id: orderId
+        id: orderId,
       },
       metadata: {
         requestId: req['requestId'],
         timestamp: req['timestamp'],
       },
-    })
+    });
   }
 
   @Get()
@@ -113,18 +114,18 @@ export class OrderController {
     @Param('id') id: string,
     @Body() updateOrderDto: any,
     @Req() req: Request,
-    @Res() res: Response
+    @Res() res: Response,
   ): Promise<Response> {
-    const orderId = await this.orderUseCase.update(id, updateOrderDto)
+    const orderId = await this.orderUseCase.update(id, updateOrderDto);
     return res.status(HttpStatus.OK).json({
       data: {
-        id: orderId
+        id: orderId,
       },
       metadata: {
         requestId: req['requestId'],
         timestamp: req['timestamp'],
       },
-    })
+    });
   }
 
   @Delete(':id')

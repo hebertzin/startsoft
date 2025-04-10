@@ -5,10 +5,7 @@ import {
   LoggerService,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  OrderParams,
-  Order,
-} from 'src/orders/domain/Order';
+import { OrderParams, Order } from 'src/orders/domain/Order';
 import { OrderRepository } from 'src/orders/domain/OrderRepository';
 import { InjectionToken } from '../InjectToken';
 import { v4 as uuidv4 } from 'uuid';

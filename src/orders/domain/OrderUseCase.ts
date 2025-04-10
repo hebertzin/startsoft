@@ -1,7 +1,4 @@
-import {
-  OrderParams,
-  Order,
-} from './Order';
+import { OrderParams, Order } from './Order';
 import { Status } from './OrderStatus';
 
 export interface OrderUseCase {

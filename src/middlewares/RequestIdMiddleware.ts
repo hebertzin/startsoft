@@ -13,8 +13,7 @@ export class RequestIdMiddleware implements NestMiddleware {
 
     res.setHeader('X-Request-Id', requestId);
 
-    res.on('finish', () => {
-    });
+    res.on('finish', () => {});
 
     next();
   }

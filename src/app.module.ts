@@ -25,7 +25,6 @@ import { RequestIdMiddleware } from './middlewares/RequestIdMiddleware';
   controllers: [AppController],
   providers: [AppService, AppLogger],
 })
-
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(RequestIdMiddleware).forRoutes('*');

@@ -221,9 +221,9 @@ await this.eventPublisher.publishOrderUpdated(order);
 
 3. Operations happen in parallel and are awaited with `Promise.all()`.
 
-**Important Log**:
+**Important log**:
 ```bash
-Order [ID] updated, re-indexed and event published
+   Order [ID] updated, re-indexed and event published
 ```
 
 ---

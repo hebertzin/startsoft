@@ -19,6 +19,8 @@ import {
   ApiResponse,
   ApiBody,
   ApiParam,
+  ApiOkResponse,
+  ApiBadRequestResponse,
 } from '@nestjs/swagger';
 
 import { OrderUseCase } from 'src/orders/domain/OrderUseCase';
@@ -32,24 +34,26 @@ export class OrderController {
   constructor(
     @Inject(InjectionToken.ORDERS_USE_CASE)
     private readonly orderUseCase: OrderUseCase,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new order' })
   @ApiBody({ type: OrderDTO })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'Order created successfully',
-    type: OrderDTO,
+  @ApiOkResponse({
+    description:
+      'Create a new order',
   })
-  async save(
-    @Body() input: OrderDTO,
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  public async save(
+    @Body() createOrderDTO: OrderDTO,
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<Response> {
-    const orderId = await this.orderUseCase.save(input);
+    const orderId = await this.orderUseCase.save(createOrderDTO);
     return res.status(HttpStatus.CREATED).json({
+      message: 'Order Create Successfully!',
+      status: HttpStatus.CREATED,
       data: {
         id: orderId,
       },
@@ -63,13 +67,27 @@ export class OrderController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all orders' })
-  @ApiResponse({
-    status: 200,
-    description: 'Orders found successfully',
-    type: Order,
+  @ApiOkResponse({
+    description:
+      'Find all orders',
   })
-  async findAll() {
-    return await this.orderUseCase.findAll();
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  public async findAll(
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
+    const orders = await this.orderUseCase.findAll();
+    return res.status(HttpStatus.OK).json({
+      message: 'Orders found Successfully!',
+      status: HttpStatus.OK,
+      data: {
+        orders
+      },
+      metadata: {
+        requestId: req['requestId'],
+        timestamp: req['timestamp'],
+      },
+    });
   }
 
   @Get('filter')
@@ -93,24 +111,40 @@ export class OrderController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get order by ID' })
   @ApiParam({ name: 'id', type: String })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    type: Order,
-    description: 'Order found successfully',
+  @ApiOkResponse({
+    description:
+      'Find an order by id',
   })
-  async findById(@Param('id') order_id: string): Promise<Order | null> {
-    return await this.orderUseCase.findById(order_id);
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  public async findById(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('id') order_id: string
+  ): Promise<Response> {
+    const order = await this.orderUseCase.findById(order_id)
+    return res.status(HttpStatus.OK).json({
+      message: 'Order found Successfully!',
+      status: HttpStatus.OK,
+      data: {
+        order
+      },
+      metadata: {
+        requestId: req['requestId'],
+        timestamp: req['timestamp'],
+      },
+    })
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update an order' })
   @ApiParam({ name: 'id', type: String })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Order updated successfully',
+  @ApiOkResponse({
+    description:
+      'Update an order by id',
   })
-  async update(
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  public async update(
     @Param('id') id: string,
     @Body() updateOrderDto: any,
     @Req() req: Request,
@@ -132,11 +166,16 @@ export class OrderController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete an order' })
   @ApiParam({ name: 'id', type: String })
-  @ApiResponse({
-    status: HttpStatus.NO_CONTENT,
-    description: 'Order deleted successfully',
+  @ApiOkResponse({
+    description:
+      'Delete an order by id',
   })
-  async delete(@Param('id') order_id: string): Promise<void> {
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  public async delete(
+    @Res() res: Response,
+    @Param('id') order_id: string
+  ): Promise<Response> {
     await this.orderUseCase.delete(order_id);
+    return res.status(HttpStatus.NO_CONTENT)
   }
 }

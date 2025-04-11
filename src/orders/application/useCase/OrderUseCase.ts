@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   Logger,
@@ -23,37 +24,44 @@ export class OrderUseCase {
     private readonly elasticOrderSearch: ElasticOrderSearch,
     @Inject(InjectionToken.LOGGER)
     private readonly logging: LoggerService,
-  ) {}
+  ) { }
 
-  async save(input: OrderParams): Promise<string> {
-    this.logging.log(`[OrderUseCase] Starting to create order`);
+  public async save(input: OrderParams): Promise<string> {
+    try {
+      this.logging.log(`[OrderUseCase] Starting to create order`);
 
-    const orderId = await this.orderRepository.save(input);
+      const orderId = await this.orderRepository.save(input);
 
-    this.logging.log(`Order [${orderId}] saved to repository`);
+      this.logging.log(`Order [${orderId}] saved to repository`);
 
-    await Promise.all([
-      this.elasticOrderSearch.index(input),
-      this.eventPublisher.publishOrderCreated(input),
-    ]);
+      await Promise.all([
+        this.elasticOrderSearch.index(input),
+        this.eventPublisher.publishOrderCreated(input),
+      ]);
 
-    this.logging.log(
-      `Order [${orderId}] indexed in ElasticSearch and event published`,
-    );
+      this.logging.log(
+        `Order [${orderId}] indexed in ElasticSearch and event published`,
+      );
 
-    return orderId;
+      return orderId;
+    } catch (err) {
+      this.logging.error(`[OrderUseCase] Error: ${err.message}`, err.stack);
+      
+      throw new BadRequestException('Order not created');
+    }
+
   }
 
-  async findAll(): Promise<Order[]> {
+  public async findAll(): Promise<Order[]> {
     this.logging.log(`[OrderUseCase] Fetching all orders`);
     return await this.orderRepository.findAll();
   }
 
-  async findById(order_id: string): Promise<Order> {
+  public async findById(order_id: string): Promise<Order> {
     this.logging.log(`[OrderUseCase] Finding order with ID: ${order_id}`);
-    
+
     const order = await this.orderRepository.findById(order_id);
-    
+
     if (!order) {
       this.logging.warn(`[OrderUseCase] order not found with ID: ${order_id}`);
       throw new NotFoundException('Order not found');
@@ -62,10 +70,9 @@ export class OrderUseCase {
     return order;
   }
 
-
-  async update(order_id: string, order: Order): Promise<string> {
+  public async update(order_id: string, order: Order): Promise<string> {
     this.logging.log(`[OrderUseCase] Starting to updating order [${order_id}]`);
-    
+
     const updated = await this.orderRepository.update(order_id, order);
 
     await Promise.all([
@@ -80,22 +87,22 @@ export class OrderUseCase {
     return updated;
   }
 
-  async delete(order_id: string): Promise<void> {
+  public async delete(order_id: string): Promise<void> {
     this.logging.log(`[OrderUseCase] Starting to deleting order [${order_id}]`);
-    
+
     await this.orderRepository.delete(order_id);
   }
 
-  async searchByStatus(status: string): Promise<Partial<Order>[]> {
+  public async searchByStatus(status: string): Promise<Partial<Order>[]> {
     this.logging.log(`[OrderUseCase] Searching orders with status: ${status}`);
     return await this.elasticOrderSearch.searchByStatus(status);
   }
 
-  async searchItemsByName(name: string): Promise<Partial<Order[]>> {
+  public async searchItemsByName(name: string): Promise<Partial<Order[]>> {
     return this.elasticOrderSearch.searchByItemName(name);
   }
 
-  async filterOrders(params: {
+  public async filterOrders(params: {
     id?: string;
     status?: string;
     start?: string;

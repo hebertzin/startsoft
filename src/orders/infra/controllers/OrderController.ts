@@ -34,15 +34,14 @@ export class OrderController {
   constructor(
     @Inject(InjectionToken.ORDERS_USE_CASE)
     private readonly orderUseCase: OrderUseCase,
-  ) { }
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new order' })
   @ApiBody({ type: OrderDTO })
   @ApiOkResponse({
-    description:
-      'Create a new order',
+    description: 'Create a new order',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   public async save(
@@ -68,20 +67,16 @@ export class OrderController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all orders' })
   @ApiOkResponse({
-    description:
-      'Find all orders',
+    description: 'Find all orders',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  public async findAll(
-    @Req() req: Request,
-    @Res() res: Response
-  ) {
+  public async findAll(@Req() req: Request, @Res() res: Response) {
     const orders = await this.orderUseCase.findAll();
     return res.status(HttpStatus.OK).json({
       message: 'Orders found Successfully!',
       status: HttpStatus.OK,
       data: {
-        orders
+        orders,
       },
       metadata: {
         requestId: req['requestId'],
@@ -112,27 +107,26 @@ export class OrderController {
   @ApiOperation({ summary: 'Get order by ID' })
   @ApiParam({ name: 'id', type: String })
   @ApiOkResponse({
-    description:
-      'Find an order by id',
+    description: 'Find an order by id',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   public async findById(
     @Req() req: Request,
     @Res() res: Response,
-    @Param('id') order_id: string
+    @Param('id') order_id: string,
   ): Promise<Response> {
-    const order = await this.orderUseCase.findById(order_id)
+    const order = await this.orderUseCase.findById(order_id);
     return res.status(HttpStatus.OK).json({
       message: 'Order found Successfully!',
       status: HttpStatus.OK,
       data: {
-        order
+        order,
       },
       metadata: {
         requestId: req['requestId'],
         timestamp: req['timestamp'],
       },
-    })
+    });
   }
 
   @Put(':id')
@@ -140,8 +134,7 @@ export class OrderController {
   @ApiOperation({ summary: 'Update an order' })
   @ApiParam({ name: 'id', type: String })
   @ApiOkResponse({
-    description:
-      'Update an order by id',
+    description: 'Update an order by id',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   public async update(
@@ -167,15 +160,14 @@ export class OrderController {
   @ApiOperation({ summary: 'Delete an order' })
   @ApiParam({ name: 'id', type: String })
   @ApiOkResponse({
-    description:
-      'Delete an order by id',
+    description: 'Delete an order by id',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   public async delete(
     @Res() res: Response,
-    @Param('id') order_id: string
+    @Param('id') order_id: string,
   ): Promise<Response> {
     await this.orderUseCase.delete(order_id);
-    return res.status(HttpStatus.NO_CONTENT)
+    return res.status(HttpStatus.NO_CONTENT);
   }
 }
